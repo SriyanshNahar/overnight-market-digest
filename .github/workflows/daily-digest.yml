@@ -1,0 +1,35 @@
+name: Daily Overnight Market Digest
+
+on:
+  schedule:
+    - cron: '30 3 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  send-digest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run digest script
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          SENDGRID_FROM_EMAIL: ${{ secrets.SENDGRID_FROM_EMAIL }}
+          SENDGRID_TO_EMAIL: ${{ secrets.SENDGRID_TO_EMAIL }}
+          NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
+          LOOKBACK_HOURS: '13'
+          MAX_ITEMS: '10'
+        run: node src/index.js
