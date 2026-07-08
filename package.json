@@ -1,0 +1,20 @@
+{
+  "name": "overnight-market-digest",
+  "version": "1.0.0",
+  "description": "Fetches overnight (9PM-9AM) market-moving news, summarizes with Claude, sends via Telegram + Email",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js",
+    "test:fetch": "node -e \"require('./src/fetchNews').fetchAllNews().then(n => console.log(JSON.stringify(n, null, 2)))\""
+  },
+  "dependencies": {
+    "rss-parser": "^3.13.0",
+    "axios": "^1.7.7",
+    "@sendgrid/mail": "^8.1.4",
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
