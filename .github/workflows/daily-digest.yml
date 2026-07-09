@@ -2,7 +2,7 @@ name: Daily Overnight Market Digest
 
 on:
   schedule:
-    - cron: '56 4 * * *'
+   - cron: '2 6 * * *'
   workflow_dispatch: {}
 
 jobs:
