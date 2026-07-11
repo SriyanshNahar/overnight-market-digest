@@ -14,9 +14,6 @@ function todayLabel() {
   });
 }
 
-/**
- * Build the Telegram message (Markdown formatted).
- */
 function formatTelegramMessage(summaries) {
   const date = todayLabel();
 
@@ -38,14 +35,10 @@ function formatTelegramMessage(summaries) {
   return msg;
 }
 
-// Telegram Markdown needs a few characters escaped
 function escapeMd(text = '') {
   return text.replace(/([_*[\]()~`>#+\-=|{}.!])/g, '\\$1');
 }
 
-/**
- * Build the HTML email version.
- */
 function formatEmailHtml(summaries) {
   const date = todayLabel();
 
@@ -89,9 +82,27 @@ function formatEmailHtml(summaries) {
     </div>`;
 }
 
-/**
- * Telegram messages have a 4096 char limit. Split into chunks if needed.
- */
+function formatWhatsAppMessage(summaries) {
+  const date = todayLabel();
+
+  if (!summaries.length) {
+    return `🌙 *Overnight Market Digest* — ${date}\n\nNo significant market-moving news found. Quiet night! ✅`;
+  }
+
+  let msg = `🌙 *Overnight Market Digest* — ${date}\nNews from 9 PM-9 AM that could impact trading\n\n`;
+
+  summaries.forEach((item, i) => {
+    const emoji = IMPACT_EMOJI[item.impact] || '⚖️';
+    msg += `${i + 1}. ${emoji} *${item.title}*\n`;
+    msg += `${item.summary}\n`;
+    if (item.link) msg += `${item.link}\n`;
+    msg += `\n`;
+  });
+
+  msg += `_${summaries.length} market-relevant stories overnight_`;
+  return msg;
+}
+
 function splitForTelegram(text, limit = 4000) {
   if (text.length <= limit) return [text];
   const chunks = [];
@@ -106,4 +117,4 @@ function splitForTelegram(text, limit = 4000) {
   return chunks;
 }
 
-module.exports = { formatTelegramMessage, formatEmailHtml, splitForTelegram };
+module.exports = { formatTelegramMessage, formatEmailHtml, formatWhatsAppMessage, splitForTelegram };
